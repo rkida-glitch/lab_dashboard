@@ -490,6 +490,11 @@ ${escapeHtml([mag, maxInt].filter(Boolean).join(" / "))}</div>
 
     refreshAll();
     setInterval(refreshAll, 3 * 60 * 1000);
+
+    // 15分ごとにページ全体を再読み込み
+    setInterval(() => {
+      location.reload();
+    }, 15 * 60 * 1000);
   </script>
 </body>
 </html>
