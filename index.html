@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>木田研究室ダッシュボード</title>
+  <style>
+    :root{
+      --bg:#f3f6fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#0f766e;
+      --accent2:#0b5cab;
+      --danger:#b91c1c;
+      --warn:#b45309;
+      --border:#dbe4ee;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .container{
+      min-height:100vh;
+      padding:18px;
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+      gap:18px;
+    }
+    .header,.main,.bottom{
+      display:grid;
+      gap:18px;
+    }
+    .header{grid-template-columns:1.6fr 1fr 1fr}
+    .main{grid-template-columns:1.1fr 1fr 1fr}
+    .bottom{grid-template-columns:1fr 1fr}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+    }
+    h1{
+      margin:0;
+      font-size:1.9rem;
+      line-height:1.2;
+    }
+    .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:1rem;
+    }
+    .time{
+      font-size:3rem;
+      font-weight:700;
+      color:var(--accent);
+      text-align:center;
+      line-height:1.1;
+    }
+    .date{
+      margin-top:8px;
+      text-align:center;
+      color:var(--muted);
+      font-size:1.05rem;
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.95rem;
+      background:#e6f4ff;
+      color:var(--accent2);
+    }
+    .status-note{
+      margin-top:10px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    h2{
+      margin:0 0 14px 0;
+      font-size:1.15rem;
+      border-left:6px solid var(--accent);
+      padding-left:10px;
+    }
+    .item{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 14px;
+      background:#fbfdff;
+      margin-bottom:12px;
+    }
+    .meta{
+      font-size:.92rem;
+      font-weight:700;
+      color:var(--accent);
+      margin-bottom:4px;
+    }
+    .title{
+      font-size:1.02rem;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .desc{
+      font-size:.95rem;
+      color:var(--muted);
+      line-height:1.55;
+      white-space:pre-line;
+    }
+    .alert-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .alert-chip{
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:700;
+      font-size:.95rem;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .alert-red{
+      background:#fef2f2;
+      border-color:#fecaca;
+      color:#991b1b;
+    }
+    .alert-yellow{
+      background:#fffbeb;
+      border-color:#fde68a;
+      color:#92400e;
+    }
+    .alert-blue{
+      background:#eff6ff;
+      border-color:#bfdbfe;
+      color:#1d4ed8;
+    }
+    .big-info{
+      font-size:1.15rem;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .small{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .btn{
+      display:block;
+      text-align:center;
+      text-decoration:none;
+      color:#fff;
+      padding:12px 10px;
+      border-radius:12px;
+      font-weight:700;
+    }
+    .btn-main{background:var(--accent2)}
+    .btn-sub{background:#334155}
+    .btn-danger{background:var(--danger)}
+    .btn-ok{background:var(--accent)}
+    .updated{
+      margin-top:10px;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+    .loading{
+      color:var(--muted);
+    }
+    .error{
+      color:#991b1b;
+      font-weight:700;
+    }
+    @media (max-width: 1100px){
+      .header,.main,.bottom{grid-template-columns:1fr}
+      .time{font-size:2.4rem}
+      h1{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <section class="card">
+        <h1>木田研究室 ダッシュボード</h1>
+        <div class="sub">石川県立看護大学 災害実践看護学講座</div>
+      </section>
+
+      <section class="card">
+        <div id="time" class="time">12:00</div>
+        <div id="date" class="date">2026年3月25日（水）</div>
+      </section>
+
+      <section class="card">
+        <div class="badge">研究室運用中</div>
+        <div class="status-note">
+          来室前はメールまたはTeamsでご連絡ください。
+        </div>
+      </section>
+    </div>
+
+    <div class="main">
+      <section class="card">
+        <h2>今週の予定</h2>
+
+        <div class="item">
+          <div class="meta">月 09:00–10:30</div>
+          <div class="title">学部講義</div>
+          <div class="desc">災害看護学概論</div>
+        </div>
+
+        <div class="item">
+          <div class="meta">火 13:00–14:00</div>
+          <div class="title">ゼミ</div>
+          <div class="desc">修士論文進捗共有</div>
+        </div>
+
+        <div class="item">
+          <div class="meta">木 15:00–16:00</div>
+          <div class="title">共同研究ミーティング</div>
+          <div class="desc">オンライン打ち合わせ</div>
+        </div>
+
+        <div class="item">
+          <div class="meta">金 16:30–</div>
+          <div class="title">オープンラボ</div>
+          <div class="desc">研究室見学歓迎</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>石川県の天気</h2>
+        <div id="weatherBox" class="loading">読み込み中…</div>
+        <div id="weatherUpdated" class="updated"></div>
+
+        <div class="buttons">
+          <a class="btn btn-ok" href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=170000" target="_blank" rel="noopener noreferrer">詳細天気</a>
+          <a class="btn btn-sub" href="https://www.jma.go.jp/bosai/map.html" target="_blank" rel="noopener noreferrer">気象庁地図</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>地震情報 / 気象警報</h2>
+
+        <div style="margin-bottom:16px;">
+          <div class="big-info">最新地震情報</div>
+          <div id="quakeBox" class="loading">読み込み中…</div>
+          <div id="quakeUpdated" class="updated"></div>
+        </div>
+
+        <div>
+          <div class="big-info">石川県の気象警報・注意報</div>
+          <div id="warningBox" class="loading">読み込み中…</div>
+          <div id="warningUpdated" class="updated"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="bottom">
+      <section class="card">
+        <h2>お知らせ</h2>
+
+        <div class="item">
+          <div class="title">学生向け連絡</div>
+          <div class="desc">面談希望者は事前にご連絡ください。</div>
+        </div>
+
+        <div class="item">
+          <div class="title">研究テーマ</div>
+          <div class="desc">災害看護、看護提供体制、看護資源配置、GIS活用に関心のある学生を歓迎します。</div>
+        </div>
+
+        <div class="item">
+          <div class="title">今週のメモ</div>
+          <div class="desc">ゼミ資料は前日までに共有フォルダへ。</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>外部リンク</h2>
+        <div class="buttons">
+          <a class="btn btn-danger" href="https://www.data.jma.go.jp/multi/quake/" target="_blank" rel="noopener noreferrer">地震情報ページ</a>
+          <a class="btn btn-ok" href="https://www.jma.go.jp/" target="_blank" rel="noopener noreferrer">気象庁</a>
+          <a class="btn btn-sub" href="https://www.pref.ishikawa.lg.jp/" target="_blank" rel="noopener noreferrer">石川県</a>
+          <a class="btn btn-main" href="https://www.office.com/" target="_blank" rel="noopener noreferrer">Office 365</a>
+        </div>
+        <p class="small" style="margin-top:14px;">
+          ※ 自動表示が取得失敗したときでも、上のリンクから直接確認できます。
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------------
+    // 設定
+    // -----------------------------
+    const OFFICE_CODE = "170000"; // 石川県
+    const WEATHER_URL = `https://www.jma.go.jp/bosai/forecast/data/forecast/${OFFICE_CODE}.json`;
+    const WARNING_URL = `https://www.jma.go.jp/bosai/warning/data/warning/${OFFICE_CODE}.json`;
+    const QUAKE_LIST_URL = `https://www.jma.go.jp/bosai/quake/data/list.json`;
+
+    // -----------------------------
+    // 時刻・日付
+    // -----------------------------
+    function updateClock() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = now.getMonth() + 1;
+      const d = now.getDate();
+      const dayNames = ["日","月","火","水","木","金","土"];
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+
+      document.getElementById("time").textContent = `${hh}:${mm}`;
+      document.getElementById("date").textContent = `${y}年${m}月${d}日（${dayNames[now.getDay()]}）`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function escapeHtml(str = "") {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function formatUpdatedTime(date = new Date()) {
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mm = String(date.getMinutes()).padStart(2, "0");
+      const ss = String(date.getSeconds()).padStart(2, "0");
+      return `更新: ${hh}:${mm}:${ss}`;
+    }
+
+    // -----------------------------
+    // 天気
+    // -----------------------------
+    async function loadWeather() {
+      const box = document.getElementById("weatherBox");
+      const updated = document.getElementById("weatherUpdated");
+
+      try {
+        const res = await fetch(WEATHER_URL);
+        if (!res.ok) throw new Error("天気データの取得に失敗");
+        const data = await res.json();
+
+        // できるだけ石川県全体の代表値を拾う
+        const series = data?.[0]?.timeSeries || [];
+        const ts0 = series[0];
+        const ts1 = series[1];
+
+        const area0 = ts0?.areas?.[0];
+        const area1 = ts1?.areas?.[0];
+
+        const weather = area0?.weathers?.[0] || "情報なし";
+        const wind = area0?.winds?.[0] || "";
+        const wave = area0?.waves?.[0] || "";
+
+        let tempText = "";
+        if (area1?.temps && area1.temps.length >= 2) {
+          tempText = `予想気温: ${area1.temps[0]} / ${area1.temps[1]}℃`;
+        }
+
+        box.innerHTML = `
+          <div class="item">
+            <div class="title">今日の天気</div>
+            <div class="desc">${escapeHtml(weather)}</div>
+          </div>
+          <div class="item">
+            <div class="title">補足</div>
+            <div class="desc">${escapeHtml(wind || "風の情報なし")}
+${escapeHtml(wave || "")}
+${escapeHtml(tempText || "")}</div>
+          </div>
+        `;
+        updated.textContent = formatUpdatedTime();
+      } catch (err) {
+        box.innerHTML = `<div class="error">天気情報を取得できませんでした</div>`;
+        updated.textContent = "";
+      }
+    }
+
+    // -----------------------------
+    // 警報・注意報
+    // -----------------------------
+    async function loadWarnings() {
+      const box = document.getElementById("warningBox");
+      const updated = document.getElementById("warningUpdated");
+
+      try {
+        const res = await fetch(WARNING_URL);
+        if (!res.ok) throw new Error("警報データの取得に失敗");
+        const data = await res.json();
+
+        // prefecture level
+        const areaTypes = data?.areaTypes || [];
+        const officeType = areaTypes.find(x => x.code === "office") || areaTypes[0];
+        const areas = officeType?.areas || [];
+
+        const ishikawa = areas.find(a => a.code === OFFICE_CODE) || areas[0];
+        const warnings = ishikawa?.warnings || [];
+
+        const active = warnings.filter(w => w.status !== "解除" && w.status !== "発表警報・注意報はなし");
+
+        if (!active.length) {
+          box.innerHTML = `<div class="alert-chip alert-blue">現在、石川県に発表中の警報・注意報は見つかりませんでした</div>`;
+          updated.textContent = formatUpdatedTime();
+          return;
+        }
+
+        const html = active.slice(0, 8).map(w => {
+          const status = w.status || "";
+          const name = w.name || "名称不明";
+          let cls = "alert-blue";
+          if (status.includes("警報") || status.includes("特別")) cls = "alert-red";
+          else if (status.includes("注意報")) cls = "alert-yellow";
+          return `<div class="alert-chip ${cls}">${escapeHtml(name)}（${escapeHtml(status)}）</div>`;
+        }).join("");
+
+        box.innerHTML = `<div class="alert-list">${html}</div>`;
+        updated.textContent = formatUpdatedTime();
+      } catch (err) {
+        box.innerHTML = `<div class="error">気象警報情報を取得できませんでした</div>`;
+        updated.textContent = "";
+      }
+    }
+
+    // -----------------------------
+    // 地震情報
+    // -----------------------------
+    async function loadQuakes() {
+      const box = document.getElementById("quakeBox");
+      const updated = document.getElementById("quakeUpdated");
+
+      try {
+        const res = await fetch(QUAKE_LIST_URL);
+        if (!res.ok) throw new Error("地震データの取得に失敗");
+        const data = await res.json();
+
+        const latest = Array.isArray(data) ? data[0] : null;
+        if (!latest) {
+          box.innerHTML = `<div class="small">表示できる地震情報がありません</div>`;
+          updated.textContent = formatUpdatedTime();
+          return;
+        }
+
+        const title = latest?.ttl || "最新地震情報";
+        const time = latest?.at || "";
+        const mag = latest?.mag ? `M${latest.mag}` : "";
+        const maxInt = latest?.maxi ? `最大震度 ${latest.maxi}` : "";
+        const place = latest?.anm || "";
+
+        box.innerHTML = `
+          <div class="item">
+            <div class="title">${escapeHtml(title)}</div>
+            <div class="desc">${escapeHtml(time)}
+${escapeHtml(place)}
+${escapeHtml([mag, maxInt].filter(Boolean).join(" / "))}</div>
+          </div>
+        `;
+        updated.textContent = formatUpdatedTime();
+      } catch (err) {
+        box.innerHTML = `<div class="error">地震情報を取得できませんでした</div>`;
+        updated.textContent = "";
+      }
+    }
+
+    // -----------------------------
+    // 初回実行 + 定期更新
+    // -----------------------------
+    async function refreshAll() {
+      await Promise.all([
+        loadWeather(),
+        loadWarnings(),
+        loadQuakes()
+      ]);
+    }
+
+    refreshAll();
+
+    // 天気・警報は10分ごと、地震は1分ごとでもよいが、まずは3分ごとに統一
+    setInterval(refreshAll, 3 * 60 * 1000);
+  </script>
+</body>
+</html>
