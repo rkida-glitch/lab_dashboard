@@ -6,16 +6,16 @@
   <title>木田研究室ダッシュボード</title>
   <style>
     :root{
-      --bg:#f3f6fb;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --accent:#0f766e;
-      --accent2:#0b5cab;
-      --danger:#b91c1c;
-      --warn:#b45309;
-      --border:#dbe4ee;
-      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --bg:#0b0f14;
+      --card:#121821;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#2dd4bf;
+      --accent2:#60a5fa;
+      --danger:#f87171;
+      --warn:#f59e0b;
+      --border:#243041;
+      --shadow:0 8px 24px rgba(0,0,0,.35);
       --radius:18px;
     }
     *{box-sizing:border-box}
@@ -322,8 +322,9 @@
       const dayNames = ["日","月","火","水","木","金","土"];
       const hh = String(now.getHours()).padStart(2, "0");
       const mm = String(now.getMinutes()).padStart(2, "0");
+      const ss = String(now.getSeconds()).padStart(2, "0");
 
-      document.getElementById("time").textContent = `${hh}:${mm}`;
+      document.getElementById("time").textContent = `${hh}:${mm}`:${ss}`;
       document.getElementById("date").textContent = `${y}年${m}月${d}日（${dayNames[now.getDay()]}）`;
     }
     updateClock();
