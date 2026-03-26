@@ -57,11 +57,12 @@
       font-size:1rem;
     }
     .time{
-      font-size:3rem;
+      font-size:2.6rem;
       font-weight:700;
       color:var(--accent);
       text-align:center;
       line-height:1.1;
+      letter-spacing:0.03em;
     }
     .date{
       margin-top:8px;
@@ -75,7 +76,7 @@
       border-radius:999px;
       font-weight:700;
       font-size:.95rem;
-      background:#e6f4ff;
+      background:rgba(96,165,250,.15);
       color:var(--accent2);
     }
     .status-note{
@@ -93,7 +94,7 @@
       border:1px solid var(--border);
       border-radius:14px;
       padding:12px 14px;
-      background:#fbfdff;
+      background:#18202b;
       margin-bottom:12px;
     }
     .meta{
@@ -124,22 +125,22 @@
       font-weight:700;
       font-size:.95rem;
       border:1px solid var(--border);
-      background:#fff;
+      background:#18202b;
     }
     .alert-red{
-      background:#fef2f2;
-      border-color:#fecaca;
-      color:#991b1b;
+      background:rgba(248,113,113,.14);
+      border-color:rgba(248,113,113,.35);
+      color:#fecaca;
     }
     .alert-yellow{
-      background:#fffbeb;
-      border-color:#fde68a;
-      color:#92400e;
+      background:rgba(245,158,11,.14);
+      border-color:rgba(245,158,11,.35);
+      color:#fde68a;
     }
     .alert-blue{
-      background:#eff6ff;
-      border-color:#bfdbfe;
-      color:#1d4ed8;
+      background:rgba(96,165,250,.14);
+      border-color:rgba(96,165,250,.35);
+      color:#bfdbfe;
     }
     .big-info{
       font-size:1.15rem;
@@ -178,12 +179,12 @@
       color:var(--muted);
     }
     .error{
-      color:#991b1b;
+      color:#fecaca;
       font-weight:700;
     }
     @media (max-width: 1100px){
       .header,.main,.bottom{grid-template-columns:1fr}
-      .time{font-size:2.4rem}
+      .time{font-size:2.2rem}
       h1{font-size:1.5rem}
     }
   </style>
@@ -198,14 +199,15 @@
       </section>
 
       <section class="card">
-        <div id="time" class="time">12:00</div>
+        <div id="time" class="time">12:00:00</div>
         <div id="date" class="date">2026年3月25日（水）</div>
       </section>
 
       <section class="card">
         <div class="badge">研究室運用中</div>
         <div class="status-note">
-          来室前はメールまたはTeamsでご連絡ください。
+          来室前はメールまたはTeamsでご連絡ください。<br>
+          平時は研究室案内、災害時は情報確認端末として使用します。
         </div>
       </section>
     </div>
@@ -324,7 +326,7 @@
       const mm = String(now.getMinutes()).padStart(2, "0");
       const ss = String(now.getSeconds()).padStart(2, "0");
 
-      document.getElementById("time").textContent = `${hh}:${mm}`:${ss}`;
+      document.getElementById("time").textContent = `${hh}:${mm}:${ss}`;
       document.getElementById("date").textContent = `${y}年${m}月${d}日（${dayNames[now.getDay()]}）`;
     }
     updateClock();
@@ -356,7 +358,6 @@
         if (!res.ok) throw new Error("天気データの取得に失敗");
         const data = await res.json();
 
-        // できるだけ石川県全体の代表値を拾う
         const series = data?.[0]?.timeSeries || [];
         const ts0 = series[0];
         const ts1 = series[1];
@@ -404,7 +405,6 @@ ${escapeHtml(tempText || "")}</div>
         if (!res.ok) throw new Error("警報データの取得に失敗");
         const data = await res.json();
 
-        // prefecture level
         const areaTypes = data?.areaTypes || [];
         const officeType = areaTypes.find(x => x.code === "office") || areaTypes[0];
         const areas = officeType?.areas || [];
@@ -489,8 +489,6 @@ ${escapeHtml([mag, maxInt].filter(Boolean).join(" / "))}</div>
     }
 
     refreshAll();
-
-    // 天気・警報は10分ごと、地震は1分ごとでもよいが、まずは3分ごとに統一
     setInterval(refreshAll, 3 * 60 * 1000);
   </script>
 </body>
